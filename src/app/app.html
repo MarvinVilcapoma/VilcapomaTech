@@ -1,0 +1,266 @@
+@if (isLoading()) {
+  <div class="loading-screen" aria-hidden="true">
+    <div class="loading-screen__inner">
+      <img class="loading-screen__logo" src="vilcapomatechlogo-mark.png" alt="">
+      <strong>{{ brandName }}</strong>
+    </div>
+  </div>
+}
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="#inicio" (click)="navigateTo('inicio', $event)">
+      <span class="brand__mark brand__mark--logo">
+        <img class="brand__logo" src="vilcapomatechlogo-mark.png" [alt]="'Logo de ' + brandName">
+      </span>
+      <span class="brand__text">
+        <strong>{{ brandName }}</strong>
+        <small>{{ slogan }}</small>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="Navegaci&oacute;n principal">
+      @for (item of navigation; track item.sectionId) {
+        <a [href]="item.href" (click)="navigateTo(item.sectionId, $event)">{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="site-header__actions">
+      <a
+        class="button button--solid button--sm button--whatsapp"
+        [href]="headerWhatsAppUrl"
+        target="_blank"
+        rel="noopener"
+      >
+        <fa-icon [icon]="faWhatsapp"></fa-icon>
+        Hablar por WhatsApp
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-controls="mobile-nav"
+        [attr.aria-expanded]="isMenuOpen()"
+        (click)="toggleMenu()"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">Abrir navegaci&oacute;n</span>
+      </button>
+    </div>
+  </div>
+
+  @if (isMenuOpen()) {
+    <div class="mobile-nav" id="mobile-nav">
+      <div class="shell mobile-nav__panel">
+        @for (item of navigation; track item.sectionId) {
+          <a [href]="item.href" (click)="navigateTo(item.sectionId, $event)">{{ item.label }}</a>
+        }
+
+        <a
+          class="button button--solid button--full button--whatsapp"
+          [href]="quoteWhatsAppUrl"
+          target="_blank"
+          rel="noopener"
+          (click)="closeMenu()"
+        >
+          <fa-icon [icon]="faWhatsapp"></fa-icon>
+          Cotizar por WhatsApp
+        </a>
+      </div>
+    </div>
+  }
+</header>
+
+<main class="landing">
+  <section class="hero" id="inicio">
+    <div class="hero__glow hero__glow--one"></div>
+    <div class="hero__glow hero__glow--two"></div>
+
+    <div class="shell hero__grid">
+      <div class="hero__content">
+        <p class="eyebrow">{{ brandName }}</p>
+        <h1>P&aacute;ginas pensadas para que tu negocio se vea mejor y se entienda con m&aacute;s claridad.</h1>
+        <p class="hero__copy">
+          La idea no es solo que tu web se vea bonita. La idea es que explique bien lo que haces,
+          que deje una mejor impresi&oacute;n y que le haga f&aacute;cil al cliente dar el siguiente paso.
+        </p>
+
+        <div class="hero__actions">
+          <a
+            class="button button--solid button--whatsapp"
+            [href]="quoteWhatsAppUrl"
+            target="_blank"
+            rel="noopener"
+          >
+            <fa-icon [icon]="faWhatsapp"></fa-icon>
+            Quiero pedir informaci&oacute;n
+          </a>
+          <a class="button button--ghost" href="#servicios" (click)="navigateTo('servicios', $event)">Ver servicios</a>
+        </div>
+      </div>
+
+      <div class="hero__panel">
+        <div class="studio-note">
+          <p class="kicker">Lo que deber&iacute;a sentir tu cliente</p>
+          <h2>Entender tu propuesta en pocos segundos y encontrar f&aacute;cilmente c&oacute;mo escribirte.</h2>
+
+          <div class="studio-note__checks">
+            @for (item of heroChecks; track item) {
+              <div class="studio-check">
+                <span class="studio-check__dot"></span>
+                <p>{{ item }}</p>
+              </div>
+            }
+          </div>
+
+          <div class="studio-note__metrics">
+            @for (metric of heroMetrics; track metric.label) {
+              <div class="metric-card">
+                <strong>{{ metric.value }}</strong>
+                <span>{{ metric.label }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light services" id="servicios">
+    <div class="shell">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Servicios</p>
+        <h2>Servicios bien explicados, con beneficios claros dentro de cada propuesta.</h2>
+        <p>Tres propuestas claras seg&uacute;n el momento en el que est&eacute; hoy tu negocio.</p>
+      </div>
+
+      <div class="services-grid">
+        @for (service of services; track service.title; let index = $index) {
+          <article class="service-card reveal" [style.--card-tone]="service.tone">
+            <div class="service-card__halo"></div>
+
+            <div class="service-card__top">
+              <span class="service-card__tag">{{ service.tag }}</span>
+              <span class="service-card__index">0{{ index + 1 }}</span>
+            </div>
+
+            <h3>{{ service.title }}</h3>
+            <p class="service-card__description">{{ service.description }}</p>
+            <p class="service-card__ideal">{{ service.idealFor }}</p>
+
+            <div class="service-card__divider"></div>
+
+            <div class="service-card__benefits">
+              @for (benefit of service.benefits; track benefit) {
+                <div class="service-benefit">
+                  <span class="service-benefit__mark"></span>
+                  <p>{{ benefit }}</p>
+                </div>
+              }
+            </div>
+
+            <a
+              class="text-link"
+              [href]="buildServiceWhatsAppUrl(service.title)"
+              target="_blank"
+              rel="noopener"
+            >
+              Consultar este servicio
+            </a>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light contact-section" id="contacto">
+    <div class="shell contact-layout">
+      <div class="cta-card reveal">
+        <div class="cta-card__content">
+          <p class="eyebrow">Contacto</p>
+          <h2>Si esta direcci&oacute;n se parece a lo que quieres para tu negocio, conversemos.</h2>
+          <p>Puedes escribir por WhatsApp o por correo. Todo va directo y sin pasos de m&aacute;s.</p>
+
+          <div class="cta-card__actions">
+            <a
+              class="button button--light button--whatsapp"
+              [href]="contactWhatsAppUrl"
+              target="_blank"
+              rel="noopener"
+            >
+              <fa-icon [icon]="faWhatsapp"></fa-icon>
+              Iniciar conversaci&oacute;n
+            </a>
+            <a class="button button--ghost-light" href="#inicio" (click)="navigateTo('inicio', $event)">Volver al inicio</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-side reveal">
+        <div class="contact-details">
+          @for (detail of contactDetails; track detail.label) {
+            @if (detail.href) {
+              <a
+                class="detail-card detail-card--link"
+                [class.detail-card--email]="detail.label === 'Correo'"
+                [href]="detail.href"
+                [attr.target]="detail.href.startsWith('http') ? '_blank' : null"
+                [attr.rel]="detail.href.startsWith('http') ? 'noopener' : null"
+              >
+                <span>{{ detail.label }}</span>
+                <strong>{{ detail.value }}</strong>
+              </a>
+            } @else {
+              <div class="detail-card" [class.detail-card--email]="detail.label === 'Correo'">
+                <span>{{ detail.label }}</span>
+                <strong>{{ detail.value }}</strong>
+              </div>
+            }
+          }
+        </div>
+
+        <div class="ceo-card ceo-card--compact">
+          <p class="eyebrow">Atenci&oacute;n directa</p>
+          <h2>{{ ownerName }}</h2>
+          <p class="ceo-card__role">{{ brandName }}</p>
+          <p class="ceo-card__quote">
+            &ldquo;Busco que tu web se entienda r&aacute;pido, se vea mejor y ayude a que el cliente te escriba con m&aacute;s confianza.&rdquo;
+          </p>
+        </div>
+
+        <div class="ceo-notes ceo-notes--compact">
+          @for (point of approachPoints; track point.title) {
+            <article class="ceo-note">
+              <h3>{{ point.title }}</h3>
+              <p>{{ point.description }}</p>
+            </article>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <nav class="site-footer__nav" aria-label="Enlaces del pie de p&aacute;gina">
+      @for (item of navigation; track item.sectionId) {
+        <a [href]="item.href" (click)="navigateTo(item.sectionId, $event)">{{ item.label }}</a>
+      }
+    </nav>
+
+    <p class="site-footer__copy">&copy; {{ currentYear }} {{ brandName }}. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<a
+  class="floating-whatsapp"
+  [href]="floatingWhatsAppUrl"
+  target="_blank"
+  rel="noopener"
+  aria-label="Contactar por WhatsApp"
+>
+  <fa-icon [icon]="faWhatsapp"></fa-icon>
+</a>

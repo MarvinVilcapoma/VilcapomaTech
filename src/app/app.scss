@@ -281,6 +281,20 @@
   line-height: 0.98;
 }
 
+.hero__topics {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.35rem;
+}
+
+.hero__topics h2 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
 .eyebrow,
 .kicker {
   margin: 0 0 1rem;
@@ -929,6 +943,10 @@
 
   .hero__copy {
     font-size: 1rem;
+  }
+
+  .hero__topics h2 {
+    font-size: clamp(1.05rem, 5vw, 1.35rem);
   }
 
   .section {

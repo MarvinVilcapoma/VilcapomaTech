@@ -53,6 +53,11 @@ export class App implements AfterViewInit, OnDestroy {
   protected readonly brandName = environment.brandName;
   protected readonly slogan = environment.slogan;
   protected readonly ownerName = environment.ownerName;
+  protected readonly heroTitle = 'Diseño web profesional para negocios';
+  protected readonly heroHighlights = [
+    'Landing pages modernas',
+    'Tiendas online e-commerce'
+  ] as const;
 
   protected readonly navigation: readonly NavItem[] = [
     { label: 'Inicio', sectionId: 'inicio', href: '#inicio' },

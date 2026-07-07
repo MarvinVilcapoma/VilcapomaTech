@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  siteUrl: 'https://vilcapoma-tech.vercel.app',
   brandName: 'Vilcapoma Tech',
   slogan: 'Webs claras para negocios que quieren verse mejor',
   ownerName: 'Marvin Vilcapoma',

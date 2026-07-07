@@ -81,7 +81,12 @@
     <div class="shell hero__grid">
       <div class="hero__content">
         <p class="eyebrow">{{ brandName }}</p>
-        <h1>P&aacute;ginas pensadas para que tu negocio se vea mejor y se entienda con m&aacute;s claridad.</h1>
+        <h1>{{ heroTitle }}</h1>
+        <div class="hero__topics">
+          @for (item of heroHighlights; track item) {
+            <h2>{{ item }}</h2>
+          }
+        </div>
         <p class="hero__copy">
           La idea no es solo que tu web se vea bonita. La idea es que explique bien lo que haces,
           que deje una mejor impresi&oacute;n y que le haga f&aacute;cil al cliente dar el siguiente paso.

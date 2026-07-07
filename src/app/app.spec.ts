@@ -22,7 +22,9 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('.hero h1')?.textContent).toContain('P\u00e1ginas pensadas');
+    expect(compiled.querySelector('.hero h1')?.textContent).toContain(
+      'Dise\u00f1o web profesional para negocios'
+    );
     expect(compiled.querySelector('.floating-whatsapp')?.getAttribute('href')).toContain(
       'https://wa.me/'
     );

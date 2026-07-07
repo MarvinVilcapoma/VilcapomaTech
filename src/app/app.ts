@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
 
 type NavItem = {
@@ -40,11 +42,19 @@ type ApproachPoint = {
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App implements AfterViewInit, OnDestroy {
+export class App implements AfterViewInit, OnDestroy, OnInit {
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly document = inject(DOCUMENT);
+  private readonly meta = inject(Meta);
+  private readonly title = inject(Title);
   private observer?: IntersectionObserver;
   private loadingTimer?: ReturnType<typeof setTimeout>;
   private readonly whatsAppNumber = environment.whatsAppNumber;
+  private readonly seoTitle = 'Diseño web profesional para negocios | Vilcapoma Tech';
+  private readonly seoDescription =
+    'Diseño web profesional para negocios con landing pages modernas, software web a medida y tiendas online en Shopify.';
+  private readonly siteUrl = environment.siteUrl;
+  private readonly logoUrl = `${environment.siteUrl}/vilcapomatechlogo.png`;
 
   protected readonly faWhatsapp = faWhatsapp;
   protected readonly isLoading = signal(true);
@@ -179,6 +189,10 @@ export class App implements AfterViewInit, OnDestroy {
     this.isMenuOpen.set(false);
   }
 
+  ngOnInit(): void {
+    this.applySeoMetadata();
+  }
+
   protected navigateTo(sectionId: string, event?: Event): void {
     event?.preventDefault();
     this.closeMenu();
@@ -211,6 +225,101 @@ export class App implements AfterViewInit, OnDestroy {
   private buildWhatsAppUrl(message: string): string {
     const messageParam = encodeURIComponent(message);
     return `https://wa.me/${this.whatsAppNumber}?text=${messageParam}`;
+  }
+
+  private applySeoMetadata(): void {
+    this.title.setTitle(this.seoTitle);
+
+    const tags: MetaDefinition[] = [
+      { name: 'description', content: this.seoDescription },
+      { name: 'robots', content: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:title', content: this.seoTitle },
+      { property: 'og:description', content: this.seoDescription },
+      { property: 'og:url', content: this.siteUrl },
+      { property: 'og:site_name', content: this.brandName },
+      { property: 'og:locale', content: 'es_PE' },
+      { property: 'og:image', content: this.logoUrl },
+      { property: 'og:image:alt', content: `Logo de ${this.brandName}` },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: this.seoTitle },
+      { name: 'twitter:description', content: this.seoDescription },
+      { name: 'twitter:image', content: this.logoUrl }
+    ];
+
+    tags.forEach((tag) => this.meta.updateTag(tag));
+
+    this.updateCanonicalUrl();
+    this.updateStructuredData();
+  }
+
+  private updateCanonicalUrl(): void {
+    const head = this.document.head;
+    let link = head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+
+    if (!link) {
+      link = this.document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      head.appendChild(link);
+    }
+
+    link.setAttribute('href', this.siteUrl);
+  }
+
+  private updateStructuredData(): void {
+    const head = this.document.head;
+    const scriptId = 'structured-data-vilcapoma-tech';
+    const existing = head.querySelector(`#${scriptId}`);
+
+    existing?.remove();
+
+    const script = this.document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = scriptId;
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ProfessionalService',
+      name: this.brandName,
+      url: this.siteUrl,
+      logo: this.logoUrl,
+      image: this.logoUrl,
+      description: this.seoDescription,
+      email: environment.email,
+      telephone: `+${environment.whatsAppNumber}`,
+      areaServed: 'PE',
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'sales',
+        telephone: `+${environment.whatsAppNumber}`,
+        email: environment.email,
+        availableLanguage: ['es']
+      },
+      makesOffer: [
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Landing pages modernas'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Software web a medida'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Tiendas online e-commerce con Shopify'
+          }
+        }
+      ]
+    });
+
+    head.appendChild(script);
   }
 
   ngAfterViewInit(): void {
